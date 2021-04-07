@@ -1,8 +1,13 @@
 import { Button } from "@material-ui/core";
 import Head from "next/head"
 import styled from "styled-components"
+import { auth, provider } from "../firebase";
 
 export const Login = () => {
+    const signIn = () => {
+        auth.signInWithPopup(provider).catch(alert)
+    }
+
     return (
         <Container>
             <Head>
@@ -10,7 +15,7 @@ export const Login = () => {
             </Head>
             <LoginContainer>
                 <Logo src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/766px-WhatsApp.svg.png" />
-                <Button variant="outlined">Sign in with Google</Button>
+                <Button onClick={signIn} variant="outlined">Sign in with Google</Button>
             </LoginContainer>
         </Container>
     )
