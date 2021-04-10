@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { auth, db } from "../firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
 
 const Chat = ({ id, users }) => {
   const router = useRouter();
@@ -14,8 +14,8 @@ const Chat = ({ id, users }) => {
   );
 
   const enterChat = () => {
-      router.push(`/chat/${id}`)
-  }
+    router.push(`/chat/${id}`);
+  };
 
   const recipient = recipientSnapshot?.docs?.[0]?.data();
   const recipientEmail = getRecipientEmail(users, user);
