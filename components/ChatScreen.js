@@ -6,9 +6,15 @@ import { auth, db } from "../firebase";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { useCollection } from "react-firebase-hooks/firestore";
+import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import MicIcon from "@material-ui/icons/Mic";
+import Message from "./Message";
+import { useState } from "react";
+import firebase from "firebase";
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
+  const [input, setInput] = useState();
   const router = useRouter();
   const [messagesSnapshot] = useCollection(
     db
@@ -33,6 +39,27 @@ const ChatScreen = ({ chat, messages }) => {
     }
   };
 
+  const sendMessage = (e) => {
+    e.preventDefault();
+
+    //Update the lastSeen...
+    db.collection("users").doc(user.uid).set(
+      {
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    db.collection("chats").doc(router.query.id).collection("messages").add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL,
+    });
+
+    setInput("");
+  };
+
   return (
     <Container>
       <Header>
@@ -54,6 +81,14 @@ const ChatScreen = ({ chat, messages }) => {
         {showMessages()}
         <EndofMessage />
       </MessageContainer>
+      <InputContainer>
+        <InsertEmoticonIcon />
+        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button hidden disabled={!input} type="submit" onClick={sendMessage}>
+          Send message
+        </button>
+        <MicIcon />
+      </InputContainer>
     </Container>
   );
 };
@@ -61,6 +96,26 @@ const ChatScreen = ({ chat, messages }) => {
 export default ChatScreen;
 
 const Container = styled.div``;
+
+const Input = styled.input`
+  flex: 1;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: whitesmoke;
+  z-index: 100;
+`;
+
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
+`;
 
 const Header = styled.div`
   position: sticky;
@@ -94,4 +149,8 @@ const HeaderIcons = styled.div``;
 
 const IconButton = styled.div``;
 
-const MessageContainer = styled.div``;
+const MessageContainer = styled.div`
+  padding: 30px;
+  background-color: #e5ded8;
+  min-height: 90vh;
+`;
