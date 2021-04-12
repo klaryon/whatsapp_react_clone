@@ -2,27 +2,50 @@ import { Avatar } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
-import { auth } from "../firebase";
-import MoreVertIcon from "@material-ui/icons/MoreVert"
-import AttachFileIcon from "@material-ui/icons/AttachFile"
+import { auth, db } from "../firebase";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import AttachFileIcon from "@material-ui/icons/AttachFile";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
   const router = useRouter();
+  const [messagesSnapshot] = useCollection(
+    db
+      .collection("chats")
+      .doc(router.query.id)
+      .collection("messages")
+      .orderBy("timestamp", "asc")
+  );
+
+  const showMessages = () => {
+    if (messagesSnapshot) {
+      return messagesSnapshot.docs.map((message) => {
+        <Message
+          key={message.id}
+          user={message.data().user}
+          message={{
+            ...message.data(),
+            timestamp: message.data().timestamp?.toDate().getTime(),
+          }}
+        />;
+      });
+    }
+  };
 
   return (
     <Container>
-      <Header> 
+      <Header>
         <Avatar />
         <HeaderInformation>
           <h3>Receipient Email</h3>
           <p>Last Seen...</p>
         </HeaderInformation>
         <HeaderIcons>
-          <IconButton> 
+          <IconButton>
             <AttachFileIcon />
           </IconButton>
-          <IconButton> 
+          <IconButton>
             <MoreVertIcon />
           </IconButton>
         </HeaderIcons>
@@ -72,5 +95,3 @@ const HeaderIcons = styled.div``;
 const IconButton = styled.div``;
 
 const MessageContainer = styled.div``;
-
-
