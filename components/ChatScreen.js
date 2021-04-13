@@ -14,7 +14,7 @@ import firebase from "firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import Timeago from "timeago-react";
 
-const ChatScreen = ({ chat, messages }) => {
+function ChatScreen ({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [input, setInput] = useState("");
   const endOfMessageRef = useRef(null);
