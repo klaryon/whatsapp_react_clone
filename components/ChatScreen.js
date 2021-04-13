@@ -135,16 +135,20 @@ const ChatScreen = ({ chat, messages }) => {
 
 export default ChatScreen;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Input = styled.input`
   flex: 1;
-  align-items: center;
-  padding: 10px;
-  position: sticky;
-  bottom: 0;
+  outline: none;
+  border: none;
+  border-radius: 10px;
   background-color: whitesmoke;
-  z-index: 100;
+  padding: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
 `;
 
 const InputContainer = styled.form`

@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar } from "@material-ui/core";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";

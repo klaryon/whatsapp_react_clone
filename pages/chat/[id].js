@@ -1,3 +1,4 @@
+import React from "react";
 import Head from "next/head";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -61,6 +62,7 @@ export async function getServerSideProps(context) {
 
 const Container = styled.div`
   display: flex;
+  box-shadow: 1px 1px 4px -1px rgba(0, 0, 0, 0.75);
 `;
 
 const ChatContainer = styled.div`
