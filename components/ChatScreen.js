@@ -1,4 +1,4 @@
-import { Avatar } from "@material-ui/core";
+import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -11,10 +11,14 @@ import MicIcon from "@material-ui/icons/Mic";
 import Message from "./Message";
 import { useState } from "react";
 import firebase from "firebase";
+import getRecipientEmail from "../utils/getRecipientEmail";
+import Timeago from "timeago-react";
 
 const ChatScreen = ({ chat, messages }) => {
+  console.log(messages);
+  console.log(chat);
   const [user] = useAuthState(auth);
-  const [input, setInput] = useState();
+  const [input, setInput] = useState("");
   const router = useRouter();
   const [messagesSnapshot] = useCollection(
     db
@@ -22,6 +26,12 @@ const ChatScreen = ({ chat, messages }) => {
       .doc(router.query.id)
       .collection("messages")
       .orderBy("timestamp", "asc")
+  );
+
+  const [recipientSnapshot] = useCollection(
+    db
+      .collection("users")
+      .where("email", "==", getRecipientEmail(chat.users, user))
   );
 
   const showMessages = () => {
@@ -36,13 +46,17 @@ const ChatScreen = ({ chat, messages }) => {
           }}
         />;
       });
+    } else {
+      return JSON.parse(messages).map((message) => {
+        <Message key={message.id} user={message.user} message={message} />;
+      });
     }
   };
 
   const sendMessage = (e) => {
     e.preventDefault();
 
-    //Update the lastSeen...
+    //Update the last seen...
     db.collection("users").doc(user.uid).set(
       {
         lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
@@ -60,13 +74,32 @@ const ChatScreen = ({ chat, messages }) => {
     setInput("");
   };
 
+  const recipient = recipientSnapshot?.docs?.[0]?.data();
+  const recipientEmail = getRecipientEmail(chat.users, user);
+
   return (
     <Container>
       <Header>
-        <Avatar />
+        {recipient ? (
+          <Avatar src={recipient?.photoURL} />
+        ) : (
+          <Avatar>{recipientEmail[0]}</Avatar>
+        )}
+
         <HeaderInformation>
-          <h3>Receipient Email</h3>
-          <p>Last Seen...</p>
+          <h3>{recipientEmail}</h3>
+          {recipientSnapshot ? (
+            <p>
+              Last active:{" "}
+              {recipient?.lastSeen?.toDate() ? (
+                <Timeago datetime={recipient?.lastSeen.toDate()} />
+              ) : (
+                "Unavailable"
+              )}
+            </p>
+          ) : (
+            <p>Loading Last active...</p>
+          )}
         </HeaderInformation>
         <HeaderIcons>
           <IconButton>
@@ -146,8 +179,6 @@ const HeaderInformation = styled.div`
 const EndofMessage = styled.div``;
 
 const HeaderIcons = styled.div``;
-
-const IconButton = styled.div``;
 
 const MessageContainer = styled.div`
   padding: 30px;
