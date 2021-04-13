@@ -56,7 +56,7 @@ const Sidebar = () => {
       </Header>
       <Search>
         <SearchIcon />
-        <SearchInput placeholder="Search in chats" />
+        <SearchInput placeholder="Search in chats" type="text" />
       </Search>
       <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
 
@@ -70,7 +70,21 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-const Container = styled.div``;
+const Container = styled.div`
+  flex: 0.45;
+  border-right: 1px solid whitesmoke;
+  height: 100vh;
+  min-width: 300px;
+  max-width: 350px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+`;
 
 const Search = styled.div`
   display: flex;
