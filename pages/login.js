@@ -4,7 +4,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import { auth, provider } from "../firebase";
 
-export const Login = () => {
+function Login() {
   const signIn = () => {
     auth.signInWithPopup(provider).catch(alert);
   };
@@ -22,7 +22,9 @@ export const Login = () => {
       </LoginContainer>
     </Container>
   );
-};
+}
+
+export default Login;
 
 const Container = styled.div`
   display: grid;
