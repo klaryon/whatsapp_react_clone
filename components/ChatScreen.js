@@ -1,24 +1,24 @@
-import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
+import { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import getRecipientEmail from "../utils/getRecipientEmail";
+import firebase from "firebase";
+import Timeago from "timeago-react";
+import { Avatar, IconButton } from "@material-ui/core";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import { useCollection } from "react-firebase-hooks/firestore";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MicIcon from "@material-ui/icons/Mic";
 import Message from "./Message";
-import { useRef, useState } from "react";
-import firebase from "firebase";
-import getRecipientEmail from "../utils/getRecipientEmail";
-import Timeago from "timeago-react";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
-  const [input, setInput] = useState("");
-  const endOfMessageRef = useRef(null);
   const router = useRouter();
+  const endOfMessagesRef = useRef(null);
+  const [input, setInput] = useState("");
   const [messagesSnapshot] = useCollection(
     db
       .collection("chats")
@@ -35,7 +35,7 @@ function ChatScreen({ chat, messages }) {
 
   const showMessages = () => {
     if (messagesSnapshot) {
-      return messagesSnapshot.docs.map((message) => {
+      return messagesSnapshot.docs.map((message) => (
         <Message
           key={message.id}
           user={message.data().user}
@@ -43,17 +43,17 @@ function ChatScreen({ chat, messages }) {
             ...message.data(),
             timestamp: message.data().timestamp?.toDate().getTime(),
           }}
-        />;
-      });
+        />
+      ));
     } else {
-      return JSON.parse(messages).map((message) => {
-        <Message key={message.id} user={message.user} message={message} />;
-      });
+      return JSON.parse(messages).map((message) => (
+        <Message key={message.id} user={message.user} message={message} />
+      ));
     }
   };
 
   const scrollToBottom = () => {
-    endOfMessageRef.current.scrollIntoView({
+    endOfMessagesRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
@@ -99,7 +99,7 @@ function ChatScreen({ chat, messages }) {
             <p>
               Last active:{" "}
               {recipient?.lastSeen?.toDate() ? (
-                <Timeago datetime={recipient?.lastSeen.toDate()} />
+                <Timeago datetime={recipient?.lastSeen?.toDate()} />
               ) : (
                 "Unavailable"
               )}
@@ -119,11 +119,15 @@ function ChatScreen({ chat, messages }) {
       </Header>
       <MessageContainer>
         {showMessages()}
-        <EndofMessage ref={endOfMessageRef} />
+        <EndofMessage ref={endOfMessagesRef} />
       </MessageContainer>
       <InputContainer>
         <InsertEmoticonIcon />
-        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          type="text"
+        />
         <button hidden disabled={!input} type="submit" onClick={sendMessage}>
           Send message
         </button>
@@ -138,27 +142,6 @@ export default ChatScreen;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const Input = styled.input`
-  flex: 1;
-  outline: none;
-  border: none;
-  border-radius: 10px;
-  background-color: whitesmoke;
-  padding: 20px;
-  margin-left: 15px;
-  margin-right: 15px;
-`;
-
-const InputContainer = styled.form`
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  position: sticky;
-  bottom: 0;
-  background-color: white;
-  z-index: 100;
 `;
 
 const Header = styled.div`
@@ -187,14 +170,35 @@ const HeaderInformation = styled.div`
   }
 `;
 
-const EndofMessage = styled.div`
-  margin-bottom: 50px;
-`;
-
 const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div`
   padding: 30px;
   background-color: #e5ded8;
   min-height: 90vh;
+`;
+
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  padding: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+`;
+
+const EndofMessage = styled.div`
+  margin-bottom: 50px;
 `;
