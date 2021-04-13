@@ -18,7 +18,7 @@ function Message({ user, message }) {
       </TypeOfMessage>
     </Container>
   );
-};
+}
 
 export default Message;
 

@@ -14,7 +14,7 @@ import firebase from "firebase";
 import getRecipientEmail from "../utils/getRecipientEmail";
 import Timeago from "timeago-react";
 
-function ChatScreen ({ chat, messages }) {
+function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [input, setInput] = useState("");
   const endOfMessageRef = useRef(null);
@@ -131,7 +131,7 @@ function ChatScreen ({ chat, messages }) {
       </InputContainer>
     </Container>
   );
-};
+}
 
 export default ChatScreen;
 
