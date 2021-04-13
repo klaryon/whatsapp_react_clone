@@ -56,7 +56,7 @@ const Sidebar = () => {
       </Header>
       <Search>
         <SearchIcon />
-        <SearchInput placeholder="Search in chats" />
+        <SearchInput placeholder="Search in chats" type="text" />
       </Search>
       <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
 
