@@ -1,4 +1,4 @@
-## Whatsapp clone
+# Whatsapp clone
 
 Build a Whatsapp clone with React and next.js.
 
