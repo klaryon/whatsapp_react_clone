@@ -1,6 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Whatsapp clone
 
-See project at: https://whatsapp-react-clone-tr.vercel.app/
+Build a Whatsapp clone with React and next.js.
+
+Get a preview at: https://whatsapp-react-clone-tr.vercel.app/
+
+![alt text](https://github.com/klaryon/whatsapp_react_clone/blob/main/assets/gif/whatsapp.gif?raw=true)
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
