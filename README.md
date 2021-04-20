@@ -1,6 +1,6 @@
 # Whatsapp clone
 
-Build a Whatsapp clone with React and next.js.
+Build a Whatsapp clone with React and next.js. Sign in with Google authentication using firebase.
 
 Get a preview at: https://whatsapp-react-clone-tr.vercel.app/
 
